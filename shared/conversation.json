@@ -1,12 +1,25 @@
 {
-  "status": "waiting",
-  "current_turn": "PO",
-  "cdc": null,
-  "po_vision": null,
+  "status": "po_vision_ready",
+  "current_turn": "BA",
+  "cdc": "Application de gestion de contacts. Backend : C# .NET 8, JWT, SQL Server, N-Tier. Frontend : Angular 17, CSS custom, Jasmine. Fonctionnalites : Auth, CRUD contacts, recherche.",
+  "po_vision": "Une application web full-stack permettant aux utilisateurs de gerer leur carnet d'adresses de maniere securisee et intuitive. Chaque utilisateur dispose de son propre espace protege par JWT pour creer, consulter, modifier et supprimer ses contacts, avec une recherche rapide. La stack C# .NET 8 / Angular 17 garantit robustesse et maintenabilite sur le long terme.",
   "po_priorities": {
-    "must_have": [],
-    "should_have": [],
-    "nice_to_have": []
+    "must_have": [
+      "Authentification (register / login / logout) avec JWT",
+      "CRUD contacts : creer, lire, modifier, supprimer",
+      "Recherche de contacts (par nom, email ou telephone)"
+    ],
+    "should_have": [
+      "Validation des formulaires cote frontend avec retour utilisateur clair",
+      "Gestion propre des erreurs HTTP (401, 403, 404, 500)",
+      "Pagination de la liste de contacts",
+      "Tests Jasmine sur les composants critiques"
+    ],
+    "nice_to_have": [
+      "Export CSV de la liste de contacts",
+      "Filtres avances (ville, categorie, tag)",
+      "Avatar / photo de profil pour chaque contact"
+    ]
   },
   "ba_analysis": null,
   "ba_questions": [],

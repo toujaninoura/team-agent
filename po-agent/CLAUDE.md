@@ -42,7 +42,7 @@ Quand le CDC est recu :
 
 5. Afficher :
 6. Lancer le BA automatiquement :
-claude --print "Lis ..\shared\conversation.json et fais ton analyse BA" --cwd "C:\Users\toujani\team-agent\ba-agent"
+$conv = Get-Content ..\shared\conversation.json -Raw; claude --print "Voici le contenu de conversation.json : $conv . Fais ton analyse BA." --cwd "C:\Users\toujani\team-agent\ba-agent"
 
 ### ETAPE 2 ? Repondre aux questions du BA
 Surveiller ..\shared\conversation.json
@@ -62,7 +62,7 @@ Ecrire dans ..\shared\conversation.json :
 
 Afficher :
 Relancer le BA :
-claude --print "PO a repondu aux questions. Propose les issues." --cwd "C:\Users\toujani\team-agent\ba-agent"
+$conv = Get-Content ..\shared\conversation.json -Raw; claude --print "Voici conversation.json : $conv . PO a repondu aux questions. Propose les issues." --cwd "C:\Users\toujani\team-agent\ba-agent"
 
 ### ETAPE 3 ? Debat sur les issues
 Surveiller ..\shared\conversation.json
@@ -96,7 +96,7 @@ Ecrire dans ..\shared\conversation.json :
 
 Afficher :
 Relancer le BA :
-claude --print "PO a review les issues. Adapte et finalise le backlog." --cwd "C:\Users\toujani\team-agent\ba-agent"
+$conv = Get-Content ..\shared\conversation.json -Raw; claude --print "Voici conversation.json : $conv . PO a review les issues. Adapte et finalise." --cwd "C:\Users\toujani\team-agent\ba-agent"
 
 ### ETAPE 4 ? Approbation finale
 Surveiller ..\shared\conversation.json
@@ -112,7 +112,7 @@ Ecrire dans ..\shared\conversation.json :
 }
 
 Lancer le BA pour creer les issues :
-claude --print "Backlog approuve par l utilisateur. Cree les issues GitHub." --cwd "C:\Users\toujani\team-agent\ba-agent"
+$conv = Get-Content ..\shared\conversation.json -Raw; claude --print "Voici conversation.json : $conv . Backlog approuve. Cree les issues GitHub." --cwd "C:\Users\toujani\team-agent\ba-agent"
 
 ### ETAPE 5 ? Conclusion
 Surveiller ..\shared\conversation.json
@@ -133,3 +133,7 @@ Sauvegarder dans ..\po-memory.json :
   },
   "decisions": []
 }
+
+
+
+

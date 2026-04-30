@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/touja/team-agent/ba-agent/**)",
+      "Bash(claude --print \"Lis ..\\\\shared\\\\conversation.json et fais ton analyse BA\")"
+    ]
+  }
+}
