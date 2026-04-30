@@ -1,0 +1,6 @@
+{
+  "agent": { "name": "BA-agent", "version": "1.0.0", "role": "Business Analyst" },
+  "project": { "name": null, "stack": null, "repo_url": null },
+  "answers": {},
+  "sprint": { "current": 1, "issues": [] }
+}

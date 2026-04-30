@@ -1,0 +1,6 @@
+{
+  "agent": { "name": "PO-agent", "version": "1.0.0", "role": "Product Owner" },
+  "project": { "name": null, "stack": null, "repo_url": null },
+  "priorities": { "must_have": [], "should_have": [], "nice_to_have": [] },
+  "decisions": []
+}

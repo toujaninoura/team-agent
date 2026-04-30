@@ -1,0 +1,21 @@
+{
+  "status": "waiting",
+  "current_turn": "PO",
+  "cdc": null,
+  "po_vision": null,
+  "po_priorities": {
+    "must_have": [],
+    "should_have": [],
+    "nice_to_have": []
+  },
+  "ba_analysis": null,
+  "ba_questions": [],
+  "po_answers": [],
+  "proposed_issues": [],
+  "approved_issues": [],
+  "rejected_issues": [],
+  "debate_rounds": [],
+  "final_status": null,
+  "repo_url": null,
+  "created_issues": []
+}
