@@ -1,29 +1,93 @@
 {
-  "status": "po_vision_ready",
+  "status": "po_answers_ready",
   "current_turn": "BA",
   "cdc": "Application de gestion de contacts. Backend : C# .NET 8, JWT, SQL Server, N-Tier. Frontend : Angular 17, CSS custom, Jasmine. Fonctionnalites : Auth, CRUD contacts, recherche.",
-  "po_vision": "Une application web full-stack permettant aux utilisateurs de gerer leur carnet d'adresses de maniere securisee et intuitive. Chaque utilisateur dispose de son propre espace protege par JWT pour creer, consulter, modifier et supprimer ses contacts, avec une recherche rapide. La stack C# .NET 8 / Angular 17 garantit robustesse et maintenabilite sur le long terme.",
+  "po_vision": "Une application web sécurisée de gestion de contacts permettant aux utilisateurs authentifiés de créer, consulter, modifier et supprimer leurs contacts via une interface Angular 17 moderne. L'architecture N-Tier garantit la maintenabilité et l'évolutivité, tandis que la recherche assure une expérience fluide même avec un grand volume de contacts.",
   "po_priorities": {
     "must_have": [
-      "Authentification (register / login / logout) avec JWT",
-      "CRUD contacts : creer, lire, modifier, supprimer",
-      "Recherche de contacts (par nom, email ou telephone)"
+      "Authentification JWT (register / login / logout)",
+      "CRUD complet des contacts (créer, lire, modifier, supprimer)",
+      "Recherche de contacts (par nom, email ou téléphone)"
     ],
     "should_have": [
-      "Validation des formulaires cote frontend avec retour utilisateur clair",
-      "Gestion propre des erreurs HTTP (401, 403, 404, 500)",
-      "Pagination de la liste de contacts",
-      "Tests Jasmine sur les composants critiques"
+      "Tests unitaires frontend avec Jasmine",
+      "Architecture N-Tier propre (Controller / Service / Repository)",
+      "Validation des données côté backend et frontend"
     ],
     "nice_to_have": [
-      "Export CSV de la liste de contacts",
-      "Filtres avances (ville, categorie, tag)",
-      "Avatar / photo de profil pour chaque contact"
+      "CSS custom soigné et responsive",
+      "Pagination des résultats de recherche",
+      "Filtres avancés (tri, catégories)"
     ]
   },
-  "ba_analysis": null,
-  "ba_questions": [],
-  "po_answers": [],
+  "ba_analysis": "Le périmètre est cohérent mais plusieurs zones d'ombre bloquent la rédaction des issues : (1) isolation des données par utilisateur non confirmée, (2) modèle de données contacts non défini, (3) tension entre 'grand volume' et pagination en NICE TO HAVE, (4) structure N-Tier non précisée, (5) règles de validation absentes.",
+  "ba_questions": [
+    {
+      "question": "Les contacts sont-ils isolés par utilisateur (chaque user ne voit que ses propres contacts) ou partagés entre tous les utilisateurs ?",
+      "impact": "Décision d'architecture fondamentale : impacte le schéma SQL, toutes les requêtes et les règles d'autorisation.",
+      "default": "Isolés par utilisateur (clé étrangère UserId sur la table Contacts)"
+    },
+    {
+      "question": "Quels sont les champs obligatoires et optionnels d'un contact ? Un contact peut-il avoir plusieurs emails ou téléphones ?",
+      "impact": "Définit le schéma SQL, les DTOs, les formulaires Angular et les critères de validation — bloque la rédaction des issues CRUD.",
+      "default": "Prénom + Nom obligatoires, Email + Téléphone optionnels, un seul de chaque par contact"
+    },
+    {
+      "question": "La suppression d'un contact doit-elle être définitive (hard delete) ou passer par une corbeille (soft delete) ?",
+      "impact": "Impacte le schéma (colonne DeletedAt), les requêtes de listing et une éventuelle feature de restauration.",
+      "default": "Hard delete définitif"
+    },
+    {
+      "question": "La recherche fonctionne-t-elle en temps réel au fil de la frappe (debounce) ou sur soumission ? Le matching est-il partiel (contient) ou exact ?",
+      "impact": "Détermine l'implémentation Angular (debounce réactif vs submit) et le comportement SQL (LIKE vs égalité).",
+      "default": "Temps réel avec debounce 300ms, matching partiel insensible à la casse"
+    },
+    {
+      "question": "La pagination est NICE TO HAVE mais la vision mentionne 'grand volume'. Doit-on limiter les résultats côté API dès le départ pour éviter des problèmes de performance ?",
+      "impact": "Sans limite API, un utilisateur avec 10 000 contacts peut saturer le frontend dès la recherche.",
+      "default": "Limite de 50 résultats max côté API, même sans UI de pagination"
+    },
+    {
+      "question": "Quelles sont les règles de mot de passe (longueur, complexité) ? Quelle est la durée de vie du JWT ? Un refresh token est-il prévu ?",
+      "impact": "Sans règles définies, la validation sera arbitraire. Le refresh token change l'architecture auth.",
+      "default": "8 caractères min avec 1 chiffre, JWT expire en 1h, pas de refresh token"
+    },
+    {
+      "question": "Combien de projets dans la solution .NET (API seule ? + Domain/Application/Infrastructure ?) ? Entity Framework Core est-il bien l'ORM retenu ?",
+      "impact": "Clean architecture vs N-Tier simple n'ont pas le même coût — impacte le nombre et la complexité des issues setup.",
+      "default": "3 projets : ContactsApp.API / ContactsApp.Service / ContactsApp.Repository + EF Core avec migrations"
+    }
+  ],
+  "po_answers": [
+    {
+      "question": "Les contacts sont-ils isolés par utilisateur (chaque user ne voit que ses propres contacts) ou partagés entre tous les utilisateurs ?",
+      "answer": "CONFIRMÉ — Isolation totale par utilisateur. Chaque user ne voit et ne gère que ses propres contacts. Clé étrangère UserId obligatoire sur la table Contacts. Toutes les requêtes doivent filtrer par l'utilisateur authentifié (claims JWT). C'est non-négociable pour la confidentialité."
+    },
+    {
+      "question": "Quels sont les champs obligatoires et optionnels d'un contact ? Un contact peut-il avoir plusieurs emails ou téléphones ?",
+      "answer": "Obligatoires : Prénom + Nom. Optionnels : Email, Téléphone, Adresse (ville + pays). Un seul email et un seul téléphone par contact pour le sprint 1 — on garde ça simple. Pas de multi-valeurs pour l'instant, c'est du NICE TO HAVE si on a du temps."
+    },
+    {
+      "question": "La suppression d'un contact doit-elle être définitive (hard delete) ou passer par une corbeille (soft delete) ?",
+      "answer": "Hard delete définitif. Pas de corbeille pour le sprint 1. Si un utilisateur supprime un contact, c'est permanent. On n'ajoute pas de complexité inutile pour une feature que personne n'a demandée."
+    },
+    {
+      "question": "La recherche fonctionne-t-elle en temps réel au fil de la frappe (debounce) ou sur soumission ? Le matching est-il partiel (contient) ou exact ?",
+      "answer": "Temps réel avec debounce 300ms côté Angular. Matching partiel insensible à la casse (SQL LIKE '%term%'). La recherche porte sur Prénom, Nom et Email. C'est l'expérience attendue par les utilisateurs modernes — pas de bouton 'Rechercher'."
+    },
+    {
+      "question": "La pagination est NICE TO HAVE mais la vision mentionne 'grand volume'. Doit-on limiter les résultats côté API dès le départ pour éviter des problèmes de performance ?",
+      "answer": "BON POINT — Je monte la limite API en SHOULD HAVE. L'API doit retourner maximum 50 contacts par requête même sans UI de pagination. C'est une décision technique minimale non-négociable pour éviter des problèmes de performance en prod."
+    },
+    {
+      "question": "Quelles sont les règles de mot de passe (longueur, complexité) ? Quelle est la durée de vie du JWT ? Un refresh token est-il prévu ?",
+      "answer": "Règles mdp : 8 caractères minimum, au moins 1 majuscule et 1 chiffre. JWT : expire en 1 heure. Pas de refresh token pour le sprint 1 — l'utilisateur se reconnecte quand le token expire. On verra le refresh token dans une prochaine itération si les users se plaignent."
+    },
+    {
+      "question": "Combien de projets dans la solution .NET (API seule ? + Domain/Application/Infrastructure ?) ? Entity Framework Core est-il bien l'ORM retenu ?",
+      "answer": "3 projets dans la solution : ContactsApp.API (controllers, middlewares, config JWT), ContactsApp.Service (logique métier, interfaces), ContactsApp.Repository (EF Core, DbContext, migrations, accès SQL Server). EF Core confirmé comme ORM. On reste sur du N-Tier classique — pas de Clean Architecture complète, c'est trop lourd pour ce périmètre."
+    }
+  ],
   "proposed_issues": [],
   "approved_issues": [],
   "rejected_issues": [],

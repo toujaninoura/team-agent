@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Read(//c/Users/touja/team-agent/ba-agent/**)",
-      "Bash(claude --print \"Lis ..\\\\shared\\\\conversation.json et fais ton analyse BA\")"
+      "Bash(claude --print \"Lis ..\\\\shared\\\\conversation.json et fais ton analyse BA\")",
+      "Bash(claude --print 'Voici le contenu de conversation.json : __TRACKED_VAR__ . Fais ton analyse BA.' --cwd 'C:\\\\Users\\\\touja\\\\team-agent\\\\ba-agent')",
+      "Bash(claude --print 'Voici le contenu de conversation.json : __TRACKED_VAR__ . Fais ton analyse BA.')",
+      "Bash(claude --print 'Voici conversation.json : __TRACKED_VAR__ . PO a repondu aux questions. Propose les issues.')"
     ]
   }
 }
