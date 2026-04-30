@@ -71,3 +71,16 @@ Sauvegarder dans po-memory.json et ba-memory.json.
 - Le PO peut refuser une feature avec une raison claire
 - La conversation doit etre naturelle et dynamique
 - Jamais de messages trop courts ou trop longs
+
+## REGLE IMPORTANTE ? PAS DE VALIDATION UTILISATEUR POUR LES QUESTIONS BA
+Le PO repond AUTOMATIQUEMENT aux questions du BA.
+Ne jamais demander a l utilisateur de repondre aux questions techniques.
+C est le role du PO de repondre.
+
+Les seuls moments ou l utilisateur intervient :
+1. Donner le CDC au debut
+2. Valider le backlog final (oui/non)
+3. Donner le nom/URL du repo GitHub
+
+Tout le reste ? questions BA, debat issues, modifications ? 
+est gere automatiquement par le PO et le BA.

@@ -1,0 +1,42 @@
+{
+  "date": "2026-04-30",
+  "project": "Application de gestion de contacts",
+  "stack": {
+    "backend": "C# .NET 8, JWT, SQL Server, N-Tier",
+    "frontend": "Angular 17, CSS custom, Jasmine"
+  },
+  "status": "EN_ATTENTE_VALIDATION",
+  "etape": 2,
+  "backlog": {
+    "MUST_HAVE": [
+      { "id": 1, "titre": "feat: authentification JWT (login & register)", "estimation": "L" },
+      { "id": 2, "titre": "feat: CRUD contacts", "estimation": "L" },
+      { "id": 3, "titre": "feat: recherche de contacts", "estimation": "M" }
+    ],
+    "SHOULD_HAVE": [
+      { "id": 4, "titre": "feat: validation des formulaires et gestion d'erreurs", "estimation": "M" },
+      { "id": 5, "titre": "feat: tests unitaires Jasmine", "estimation": "M" },
+      { "id": 6, "titre": "feat: pagination de la liste de contacts", "estimation": "S" }
+    ],
+    "NICE_TO_HAVE": [
+      { "id": 7, "titre": "feat: export des contacts (CSV)", "estimation": "S" }
+    ]
+  },
+  "questions_bloquantes": [
+    { "id": 1, "question": "Quels champs pour un contact ?", "impact": "schéma BDD, formulaires, validation" },
+    { "id": 2, "question": "Mono-utilisateur ou multi-utilisateurs ?", "impact": "isolation des données, architecture" },
+    { "id": 3, "question": "La recherche porte sur quels champs ?", "impact": "performances, indexation SQL" },
+    { "id": 4, "question": "Durée JWT et refresh token ?", "impact": "sécurité, UX" }
+  ],
+  "ordre_implementation": [1, 4, 2, 3, 6, 5, 7],
+  "conversation": [
+    { "agent": "PO", "message": "CDC reçu. Application de gestion de contacts, stack bien définie. Je lance l'analyse. BA, tu peux regarder avec moi ?" },
+    { "agent": "BA", "message": "Oui. J'ai parcouru les specs. Architecture N-Tier propre. Le périmètre me semble clair mais j'ai quelques questions avant qu'on découpe." },
+    { "agent": "PO", "message": "Commençons par les priorités, ensuite on aligne." },
+    { "agent": "BA", "message": "4 questions bloquantes identifiées sur les champs contact, isolation users, périmètre recherche, et stratégie JWT." },
+    { "agent": "BA", "message": "La gestion d'erreurs HTTP devrait être un SHOULD HAVE fort — les tests Jasmine ne couvriront pas grand chose sans ça." },
+    { "agent": "PO", "message": "Valide. Je l'élève au même niveau que les tests. Backlog découpé en 7 issues." },
+    { "agent": "BA", "message": "Je valide ce découpage. Issue 4 est un prérequis technique pour Issues 2 et 3, et pour les tests de l'Issue 5." },
+    { "agent": "PO", "message": "Noté. Ordre d'implémentation : 1 → 4 → 2 → 3 → 6 → 5 → 7. Backlog en attente de validation utilisateur." }
+  ]
+}
