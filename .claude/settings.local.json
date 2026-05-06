@@ -14,7 +14,10 @@
       "Read(//mnt/c/Users/**)",
       "Bash(Get-ChildItem -Path \"C:\\\\projects\\\\task-manager\" -Recurse -Force)",
       "Bash(Select-Object FullName, PSIsContainer)",
-      "Bash(Sort-Object FullName)"
+      "Bash(Sort-Object FullName)",
+      "Bash(Get-ChildItem -Path C:\\\\projects\\\\task-manager -Recurse -Directory)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(head -30)"
     ]
   }
 }

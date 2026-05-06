@@ -115,3 +115,25 @@ Apres creation des issues -> mettre a jour le wiki :
 
 Wiki disponibles :
 - .\wiki\task-manager\structure.md <- Task Manager sprint 1
+
+## INTERDICTIONS ABSOLUES
+- JAMAIS modifier un fichier du projet
+- JAMAIS creer une branche
+- JAMAIS ecrire du code
+- JAMAIS faire git commit ou git push sur le projet
+- JAMAIS toucher a C:\projects\task-manager
+- JAMAIS installer des packages
+
+Le team-agent cree UNIQUEMENT les issues GitHub.
+Tout le reste est le travail de uni5-dev-agent.
+
+## INTERDICTIONS ABSOLUES
+- JAMAIS modifier un fichier du projet
+- JAMAIS creer une branche
+- JAMAIS ecrire du code
+- JAMAIS faire git commit ou git push sur le projet
+- JAMAIS toucher a C:\projects\task-manager
+- JAMAIS installer des packages
+
+Le team-agent cree UNIQUEMENT les issues GitHub.
+Tout le reste est le travail de uni5-dev-agent.
