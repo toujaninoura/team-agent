@@ -92,3 +92,11 @@ Si le CDC mentionne un projet local existant :
 - Travailler directement sur le projet existant
 - Creer uniquement les nouvelles issues sur GitHub
 - Mentionner le chemin local dans chaque issue creee
+
+## REGLE ? PROJET EXISTANT
+Si le CDC mentionne un projet local existant :
+- Ne jamais cloner le repo
+- Ne jamais creer un nouveau repo
+- Travailler directement sur le projet existant
+- Creer uniquement les nouvelles issues sur GitHub
+- Mentionner le chemin local dans chaque issue creee
