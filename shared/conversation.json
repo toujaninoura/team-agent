@@ -1,98 +1,277 @@
 {
-  "status": "po_answers_ready",
-  "current_turn": "BA",
-  "cdc": "Application de gestion de contacts. Backend : C# .NET 8, JWT, SQL Server, N-Tier. Frontend : Angular 17, CSS custom, Jasmine. Fonctionnalites : Auth, CRUD contacts, recherche.",
-  "po_vision": "Une application web sécurisée de gestion de contacts permettant aux utilisateurs authentifiés de créer, consulter, modifier et supprimer leurs contacts via une interface Angular 17 moderne. L'architecture N-Tier garantit la maintenabilité et l'évolutivité, tandis que la recherche assure une expérience fluide même avec un grand volume de contacts.",
+  "status": "backlog_ready",
+  "current_turn": "USER_VALIDATION",
+  "project": "Task Manager - Fullstack C# .NET 8 + Angular 17",
+  "cdc": "Application fullstack de gestion de tâches. Backend : API REST C# .NET 8, Auth JWT, CRUD tâches (titre, description, statut, priorité, date échéance), Statuts : Todo/In Progress/Done, Priorités : Low/Medium/High, Validation titre obligatoire + date échéance valide. Stack : ASP.NET Core / EF Core / SQL Server / NUnit / N-Tier / SOLID. Frontend : Angular 17 + Bootstrap 5, login card, dashboard statistiques, tableau tâches avec badges, formulaire ajout/modif, filtres statut/priorité. Stack : Angular 17 / Bootstrap 5 / Jasmine. DB : SQL Server + seed data 10 tâches.",
+  "po_vision": "Une application web fullstack sécurisée permettant aux utilisateurs authentifiés de gérer leurs tâches via une interface Angular 17 moderne avec Bootstrap 5. L'architecture N-Tier C# .NET 8 garantit la maintenabilité, EF Core simplifie l'accès SQL Server, et le dashboard offre une visibilité immédiate sur l'avancement des tâches.",
   "po_priorities": {
     "must_have": [
-      "Authentification JWT (register / login / logout)",
-      "CRUD complet des contacts (créer, lire, modifier, supprimer)",
-      "Recherche de contacts (par nom, email ou téléphone)"
+      "Setup solution .NET 8 N-Tier (API / Service / Repository)",
+      "Authentification JWT (register / login)",
+      "Entité Task + EF Core + SQL Server + migrations",
+      "CRUD complet des tâches via API REST",
+      "Validation : titre obligatoire, date échéance valide",
+      "Setup Angular 17 + Bootstrap 5",
+      "Page login avec carte Bootstrap centrée",
+      "Dashboard avec statistiques (total / todo / in progress / done)",
+      "Liste tâches avec tableau Bootstrap + badges colorés statut/priorité",
+      "Formulaire ajout/modification avec validation Bootstrap",
+      "Filtres par statut et priorité"
     ],
     "should_have": [
-      "Tests unitaires frontend avec Jasmine",
-      "Architecture N-Tier propre (Controller / Service / Repository)",
-      "Validation des données côté backend et frontend"
+      "Seed data SQL Server (10 tâches variées)",
+      "Tests unitaires NUnit (couche Service)"
     ],
     "nice_to_have": [
-      "CSS custom soigné et responsive",
-      "Pagination des résultats de recherche",
-      "Filtres avancés (tri, catégories)"
+      "Tests unitaires Jasmine (composants Angular)"
     ]
   },
-  "ba_analysis": "Le périmètre est cohérent mais plusieurs zones d'ombre bloquent la rédaction des issues : (1) isolation des données par utilisateur non confirmée, (2) modèle de données contacts non défini, (3) tension entre 'grand volume' et pagination en NICE TO HAVE, (4) structure N-Tier non précisée, (5) règles de validation absentes.",
   "ba_questions": [
     {
-      "question": "Les contacts sont-ils isolés par utilisateur (chaque user ne voit que ses propres contacts) ou partagés entre tous les utilisateurs ?",
-      "impact": "Décision d'architecture fondamentale : impacte le schéma SQL, toutes les requêtes et les règles d'autorisation.",
-      "default": "Isolés par utilisateur (clé étrangère UserId sur la table Contacts)"
+      "question": "Les tâches sont-elles isolées par utilisateur (chaque user ne voit que ses propres tâches) ou globales à tous les utilisateurs ?",
+      "impact": "Décision d'architecture fondamentale : clé étrangère UserId sur Tasks, filtrage par claims JWT sur toutes les requêtes.",
+      "po_answer": "CONFIRMÉ — Isolation totale par utilisateur. Chaque user gère uniquement ses propres tâches. UserId obligatoire en FK sur la table Tasks, toutes les requêtes filtrées par le userId extrait des claims JWT. Non-négociable."
     },
     {
-      "question": "Quels sont les champs obligatoires et optionnels d'un contact ? Un contact peut-il avoir plusieurs emails ou téléphones ?",
-      "impact": "Définit le schéma SQL, les DTOs, les formulaires Angular et les critères de validation — bloque la rédaction des issues CRUD.",
-      "default": "Prénom + Nom obligatoires, Email + Téléphone optionnels, un seul de chaque par contact"
-    },
-    {
-      "question": "La suppression d'un contact doit-elle être définitive (hard delete) ou passer par une corbeille (soft delete) ?",
+      "question": "La suppression d'une tâche est-elle définitive (hard delete) ou avec corbeille (soft delete) ?",
       "impact": "Impacte le schéma (colonne DeletedAt), les requêtes de listing et une éventuelle feature de restauration.",
-      "default": "Hard delete définitif"
+      "po_answer": "Hard delete définitif. Pas de corbeille pour ce sprint — on garde l'architecture simple. Si un user supprime une tâche, c'est permanent."
     },
     {
-      "question": "La recherche fonctionne-t-elle en temps réel au fil de la frappe (debounce) ou sur soumission ? Le matching est-il partiel (contient) ou exact ?",
-      "impact": "Détermine l'implémentation Angular (debounce réactif vs submit) et le comportement SQL (LIKE vs égalité).",
-      "default": "Temps réel avec debounce 300ms, matching partiel insensible à la casse"
+      "question": "La date d'échéance peut-elle être dans le passé lors de la création ? Gère-t-on les fuseaux horaires ?",
+      "impact": "Définit les règles de validation côté API et le comportement du formulaire Angular (datepicker + messages d'erreur).",
+      "po_answer": "Date passée autorisée à la création (utile pour importer des tâches existantes). Validation : format date valide uniquement (pas de contrainte future). Fuseau horaire : UTC côté API, affichage local côté Angular. Simple et universel."
     },
     {
-      "question": "La pagination est NICE TO HAVE mais la vision mentionne 'grand volume'. Doit-on limiter les résultats côté API dès le départ pour éviter des problèmes de performance ?",
-      "impact": "Sans limite API, un utilisateur avec 10 000 contacts peut saturer le frontend dès la recherche.",
-      "default": "Limite de 50 résultats max côté API, même sans UI de pagination"
-    },
-    {
-      "question": "Quelles sont les règles de mot de passe (longueur, complexité) ? Quelle est la durée de vie du JWT ? Un refresh token est-il prévu ?",
-      "impact": "Sans règles définies, la validation sera arbitraire. Le refresh token change l'architecture auth.",
-      "default": "8 caractères min avec 1 chiffre, JWT expire en 1h, pas de refresh token"
-    },
-    {
-      "question": "Combien de projets dans la solution .NET (API seule ? + Domain/Application/Infrastructure ?) ? Entity Framework Core est-il bien l'ORM retenu ?",
-      "impact": "Clean architecture vs N-Tier simple n'ont pas le même coût — impacte le nombre et la complexité des issues setup.",
-      "default": "3 projets : ContactsApp.API / ContactsApp.Service / ContactsApp.Repository + EF Core avec migrations"
+      "question": "Le détail d'une tâche s'affiche-t-il dans une page dédiée, un modal Bootstrap ou un panneau latéral ?",
+      "impact": "Impacte le routing Angular, le nombre de composants à créer et l'UX globale.",
+      "po_answer": "Modal Bootstrap pour le détail et la modification — pas de page dédiée. Ça garde l'UX fluide sans rechargement de page. Le formulaire ajout/modification est le même composant modal réutilisé."
     }
   ],
-  "po_answers": [
+  "proposed_issues": [
     {
-      "question": "Les contacts sont-ils isolés par utilisateur (chaque user ne voit que ses propres contacts) ou partagés entre tous les utilisateurs ?",
-      "answer": "CONFIRMÉ — Isolation totale par utilisateur. Chaque user ne voit et ne gère que ses propres contacts. Clé étrangère UserId obligatoire sur la table Contacts. Toutes les requêtes doivent filtrer par l'utilisateur authentifié (claims JWT). C'est non-négociable pour la confidentialité."
+      "id": 1,
+      "titre": "feat: Setup solution .NET 8 N-Tier (API / Service / Repository)",
+      "priorite": "MUST HAVE",
+      "description": "Créer la solution Visual Studio avec 3 projets : TaskManager.API (controllers, middlewares, config JWT), TaskManager.Service (interfaces + implémentations métier), TaskManager.Repository (DbContext EF Core, migrations, accès SQL Server). Configurer les dépendances entre projets, injection de dépendances dans Program.cs, et structure SOLID.",
+      "criteres": [
+        "Solution .sln avec 3 projets référencés correctement",
+        "Interfaces ITaskService et ITaskRepository définies",
+        "DI configurée dans Program.cs (AddScoped pour services et repos)",
+        "EF Core installé et DbContext configuré",
+        "ConnectionString dans appsettings.json"
+      ],
+      "estimation": "S"
     },
     {
-      "question": "Quels sont les champs obligatoires et optionnels d'un contact ? Un contact peut-il avoir plusieurs emails ou téléphones ?",
-      "answer": "Obligatoires : Prénom + Nom. Optionnels : Email, Téléphone, Adresse (ville + pays). Un seul email et un seul téléphone par contact pour le sprint 1 — on garde ça simple. Pas de multi-valeurs pour l'instant, c'est du NICE TO HAVE si on a du temps."
+      "id": 2,
+      "titre": "feat: Authentification JWT (register / login)",
+      "priorite": "MUST HAVE",
+      "description": "Implémenter l'authentification JWT avec endpoints POST /api/auth/register et POST /api/auth/login. Hash des mots de passe avec BCrypt. Token JWT signé (expiration 1h) contenant le userId dans les claims. Validation : email unique, mot de passe 8 caractères minimum. Middleware d'authentification configuré sur toutes les routes /api/tasks.",
+      "criteres": [
+        "POST /api/auth/register crée un user (email unique, mdp hashé BCrypt)",
+        "POST /api/auth/login retourne un JWT valide 1h",
+        "JWT contient userId dans les claims",
+        "Routes /api/tasks protégées par [Authorize]",
+        "Erreurs 400/401 correctement formatées"
+      ],
+      "estimation": "M"
     },
     {
-      "question": "La suppression d'un contact doit-elle être définitive (hard delete) ou passer par une corbeille (soft delete) ?",
-      "answer": "Hard delete définitif. Pas de corbeille pour le sprint 1. Si un utilisateur supprime un contact, c'est permanent. On n'ajoute pas de complexité inutile pour une feature que personne n'a demandée."
+      "id": 3,
+      "titre": "feat: Entité Task + EF Core + SQL Server + migrations",
+      "priorite": "MUST HAVE",
+      "description": "Définir l'entité Task avec propriétés (Id, UserId, Title, Description, Status, Priority, DueDate, CreatedAt, UpdatedAt). Configurer EF Core avec SQL Server, créer la migration initiale et appliquer le schéma. FK UserId -> Users table. Enums pour Status (Todo/InProgress/Done) et Priority (Low/Medium/High).",
+      "criteres": [
+        "Entité Task avec toutes les propriétés requises",
+        "Enums TaskStatus et TaskPriority définis",
+        "FK UserId correctement configurée",
+        "Migration initiale créée et applicable",
+        "Base de données créée via 'dotnet ef database update'"
+      ],
+      "estimation": "S"
     },
     {
-      "question": "La recherche fonctionne-t-elle en temps réel au fil de la frappe (debounce) ou sur soumission ? Le matching est-il partiel (contient) ou exact ?",
-      "answer": "Temps réel avec debounce 300ms côté Angular. Matching partiel insensible à la casse (SQL LIKE '%term%'). La recherche porte sur Prénom, Nom et Email. C'est l'expérience attendue par les utilisateurs modernes — pas de bouton 'Rechercher'."
+      "id": 4,
+      "titre": "feat: CRUD complet des tâches via API REST",
+      "priorite": "MUST HAVE",
+      "description": "Implémenter les 5 endpoints REST pour la gestion des tâches, tous filtrés par userId JWT. GET /api/tasks (liste), GET /api/tasks/{id}, POST /api/tasks (création), PUT /api/tasks/{id} (modification), DELETE /api/tasks/{id} (suppression hard delete). DTOs séparés pour Request/Response. Retours HTTP corrects (200, 201, 204, 404).",
+      "criteres": [
+        "GET /api/tasks retourne uniquement les tâches du user connecté",
+        "POST /api/tasks crée une tâche avec UserId du token",
+        "PUT /api/tasks/{id} met à jour (vérifie que la tâche appartient au user)",
+        "DELETE /api/tasks/{id} supprime (vérifie propriété)",
+        "404 si tâche inexistante ou appartient à un autre user",
+        "DTOs Request/Response distincts (pas d'exposition de l'entité)"
+      ],
+      "estimation": "M"
     },
     {
-      "question": "La pagination est NICE TO HAVE mais la vision mentionne 'grand volume'. Doit-on limiter les résultats côté API dès le départ pour éviter des problèmes de performance ?",
-      "answer": "BON POINT — Je monte la limite API en SHOULD HAVE. L'API doit retourner maximum 50 contacts par requête même sans UI de pagination. C'est une décision technique minimale non-négociable pour éviter des problèmes de performance en prod."
+      "id": 5,
+      "titre": "feat: Validation des tâches (titre obligatoire, date échéance valide)",
+      "priorite": "MUST HAVE",
+      "description": "Implémenter la validation côté API : titre obligatoire (non vide, max 200 caractères), description optionnelle (max 1000 caractères), date d'échéance optionnelle mais doit être une date valide si fournie, statut et priorité doivent correspondre aux valeurs des enums. Utiliser DataAnnotations ou FluentValidation. Retourner 400 avec détail des erreurs.",
+      "criteres": [
+        "Titre obligatoire, min 1 char, max 200 chars",
+        "Description optionnelle, max 1000 chars",
+        "DueDate : format date valide si fournie",
+        "Status et Priority : valeurs enum uniquement",
+        "400 Bad Request avec liste des erreurs de validation"
+      ],
+      "estimation": "S"
     },
     {
-      "question": "Quelles sont les règles de mot de passe (longueur, complexité) ? Quelle est la durée de vie du JWT ? Un refresh token est-il prévu ?",
-      "answer": "Règles mdp : 8 caractères minimum, au moins 1 majuscule et 1 chiffre. JWT : expire en 1 heure. Pas de refresh token pour le sprint 1 — l'utilisateur se reconnecte quand le token expire. On verra le refresh token dans une prochaine itération si les users se plaignent."
+      "id": 6,
+      "titre": "feat: Setup Angular 17 + Bootstrap 5",
+      "priorite": "MUST HAVE",
+      "description": "Initialiser le projet Angular 17 avec Angular CLI. Installer Bootstrap 5 et configurer dans angular.json. Créer la structure des modules/composants : AuthModule (login), TasksModule (dashboard, liste, formulaire). Configurer le routing, HttpClient, intercepteur JWT pour ajouter le Bearer token automatiquement sur toutes les requêtes.",
+      "criteres": [
+        "Projet Angular 17 créé et compilable",
+        "Bootstrap 5 CSS + JS intégrés dans angular.json",
+        "Routing configuré (/, /login, /tasks)",
+        "HttpClient configuré avec intercepteur JWT",
+        "AuthGuard sur les routes protégées",
+        "Service AuthService avec gestion du token localStorage"
+      ],
+      "estimation": "S"
     },
     {
-      "question": "Combien de projets dans la solution .NET (API seule ? + Domain/Application/Infrastructure ?) ? Entity Framework Core est-il bien l'ORM retenu ?",
-      "answer": "3 projets dans la solution : ContactsApp.API (controllers, middlewares, config JWT), ContactsApp.Service (logique métier, interfaces), ContactsApp.Repository (EF Core, DbContext, migrations, accès SQL Server). EF Core confirmé comme ORM. On reste sur du N-Tier classique — pas de Clean Architecture complète, c'est trop lourd pour ce périmètre."
+      "id": 7,
+      "titre": "feat: Page login avec carte Bootstrap centrée",
+      "priorite": "MUST HAVE",
+      "description": "Créer le composant LoginComponent avec une carte Bootstrap centrée verticalement et horizontalement. Formulaire réactif Angular avec champs email et mot de passe. Onglets ou toggle Register/Login. Validation côté frontend (email format, mdp min 8 chars). Affichage des erreurs API (email déjà utilisé, identifiants invalides). Redirection vers /tasks après login réussi.",
+      "criteres": [
+        "Carte Bootstrap centrée (flexbox/grid) sur fond gris",
+        "Formulaire réactif avec validation Angular",
+        "Toggle Login / Register fonctionnel",
+        "Messages d'erreur affichés sous les champs invalides",
+        "Redirection vers /tasks après authentification",
+        "Redirection vers /login si token absent ou expiré"
+      ],
+      "estimation": "S"
+    },
+    {
+      "id": 8,
+      "titre": "feat: Dashboard avec statistiques des tâches",
+      "priorite": "MUST HAVE",
+      "description": "Créer le composant DashboardComponent affichant 4 cartes Bootstrap avec compteurs : Total tâches, Todo, In Progress, Done. Données calculées dynamiquement depuis la liste des tâches chargée. Mise à jour automatique quand une tâche est créée/modifiée/supprimée. Design Bootstrap avec icônes colorées par statut.",
+      "criteres": [
+        "4 cartes Bootstrap affichant Total / Todo / In Progress / Done",
+        "Compteurs calculés depuis les données réelles",
+        "Mise à jour temps réel quand le backlog change",
+        "Responsive : 2x2 sur mobile, 4 colonnes sur desktop",
+        "Couleurs distinctes par statut (gris/jaune/bleu/vert)"
+      ],
+      "estimation": "M"
+    },
+    {
+      "id": 9,
+      "titre": "feat: Liste des tâches avec tableau Bootstrap et badges colorés",
+      "priorite": "MUST HAVE",
+      "description": "Créer le composant TaskListComponent affichant un tableau Bootstrap responsive avec colonnes : Titre, Description (tronquée), Statut (badge coloré), Priorité (badge coloré), Date échéance, Actions (modifier/supprimer). Badges : Todo=gris, InProgress=warning, Done=success, Low=info, Medium=warning, High=danger. Confirmation avant suppression.",
+      "criteres": [
+        "Tableau Bootstrap responsive avec toutes les colonnes",
+        "Badge statut : Todo=secondary, InProgress=warning, Done=success",
+        "Badge priorité : Low=info, Medium=warning, High=danger",
+        "Boutons Modifier et Supprimer sur chaque ligne",
+        "Confirmation dialog avant suppression",
+        "Message 'Aucune tâche' si liste vide"
+      ],
+      "estimation": "M"
+    },
+    {
+      "id": 10,
+      "titre": "feat: Formulaire ajout/modification de tâche (modal Bootstrap)",
+      "priorite": "MUST HAVE",
+      "description": "Créer le composant TaskFormComponent en modal Bootstrap réutilisable pour ajout et modification. Champs : Titre (required), Description (textarea), Statut (select), Priorité (select), Date échéance (datepicker). Validation Bootstrap avec messages d'erreur inline. Soumission vers API POST (création) ou PUT (modification). Fermeture et refresh liste après succès.",
+      "criteres": [
+        "Modal Bootstrap avec formulaire réactif Angular",
+        "Champs titre, description, statut, priorité, date échéance",
+        "Validation Bootstrap (is-invalid) sur champs requis",
+        "Mode création (POST) et modification (PUT) sur même composant",
+        "Pré-remplissage des champs en mode édition",
+        "Fermeture modal + refresh liste après succès API"
+      ],
+      "estimation": "M"
+    },
+    {
+      "id": 11,
+      "titre": "feat: Filtres par statut et priorité",
+      "priorite": "MUST HAVE",
+      "description": "Ajouter des filtres au-dessus de la liste des tâches : sélecteurs Bootstrap pour filtrer par Statut (Tous/Todo/In Progress/Done) et Priorité (Tous/Low/Medium/High). Filtrage côté client sur les données déjà chargées (pas de nouvel appel API). Combinaison des filtres possible (ex: InProgress + High). Reset des filtres par bouton.",
+      "criteres": [
+        "Select Bootstrap Statut avec option 'Tous'",
+        "Select Bootstrap Priorité avec option 'Tous'",
+        "Filtrage côté client en temps réel",
+        "Combinaison des deux filtres fonctionne correctement",
+        "Bouton Reset remet tous les filtres à 'Tous'",
+        "Compteur de résultats filtrés affiché"
+      ],
+      "estimation": "S"
+    },
+    {
+      "id": 12,
+      "titre": "feat: Seed data SQL Server (10 tâches variées)",
+      "priorite": "SHOULD HAVE",
+      "description": "Créer un seed data EF Core avec un user de démo et 10 tâches couvrant tous les statuts et priorités. Tâches réalistes dans le contexte d'un projet web. Seed exécuté au démarrage de l'API si la base est vide. User démo : demo@taskmanager.com / Demo1234.",
+      "criteres": [
+        "1 user démo créé (demo@taskmanager.com / Demo1234)",
+        "10 tâches variées : au moins 3 Todo, 4 InProgress, 3 Done",
+        "Mix de priorités : Low, Medium et High représentés",
+        "Seed conditionnel : uniquement si la table Tasks est vide",
+        "Tâches avec DueDate variées (passées, futures, null)"
+      ],
+      "estimation": "S"
+    },
+    {
+      "id": 13,
+      "titre": "feat: Tests unitaires NUnit (couche Service)",
+      "priorite": "SHOULD HAVE",
+      "description": "Créer un projet de tests NUnit pour la couche Service. Tester les cas nominaux et les cas d'erreur pour TaskService : GetByUserId, GetById (avec vérification propriété), CreateTask, UpdateTask, DeleteTask. Mocker ITaskRepository avec Moq. Couvrir les scénarios de validation et les retours 404.",
+      "criteres": [
+        "Projet TaskManager.Tests.Unit configuré avec NUnit + Moq",
+        "Tests pour chaque méthode de TaskService",
+        "Test : user ne peut pas accéder aux tâches d'un autre user",
+        "Test : création avec titre vide lève une exception",
+        "Tous les tests passent en 'dotnet test'",
+        "Coverage > 80% sur la couche Service"
+      ],
+      "estimation": "M"
+    },
+    {
+      "id": 14,
+      "titre": "feat: Tests unitaires Jasmine (composants Angular)",
+      "priorite": "NICE TO HAVE",
+      "description": "Créer les tests Jasmine/Karma pour les composants Angular principaux : LoginComponent (validation formulaire), TaskListComponent (affichage badges, filtres), TaskFormComponent (soumission formulaire). Mocker les services HTTP avec HttpClientTestingModule.",
+      "criteres": [
+        "Tests LoginComponent : validation email, mdp, messages erreur",
+        "Tests TaskListComponent : filtres statut/priorité, badges",
+        "Tests TaskFormComponent : création, modification, validation",
+        "Tous les tests passent via 'ng test --no-watch'",
+        "Pas de tests qui dépendent d'un serveur réel"
+      ],
+      "estimation": "M"
     }
   ],
-  "proposed_issues": [],
   "approved_issues": [],
   "rejected_issues": [],
   "debate_rounds": [],
-  "final_status": null,
-  "repo_url": null,
-  "created_issues": []
+  "final_status": "completed",
+  "repo_url": "https://github.com/toujaninoura/task-manager",
+  "created_issues": [
+    { "id": 1, "url": "https://github.com/toujaninoura/task-manager/issues/1", "titre": "feat: Setup solution .NET 8 N-Tier", "priorite": "MUST HAVE" },
+    { "id": 2, "url": "https://github.com/toujaninoura/task-manager/issues/2", "titre": "feat: Authentification JWT", "priorite": "MUST HAVE" },
+    { "id": 3, "url": "https://github.com/toujaninoura/task-manager/issues/3", "titre": "feat: Entité Task + EF Core + SQL Server", "priorite": "MUST HAVE" },
+    { "id": 4, "url": "https://github.com/toujaninoura/task-manager/issues/4", "titre": "feat: CRUD complet des tâches via API REST", "priorite": "MUST HAVE" },
+    { "id": 5, "url": "https://github.com/toujaninoura/task-manager/issues/5", "titre": "feat: Validation des tâches", "priorite": "MUST HAVE" },
+    { "id": 6, "url": "https://github.com/toujaninoura/task-manager/issues/6", "titre": "feat: Setup Angular 17 + Bootstrap 5", "priorite": "MUST HAVE" },
+    { "id": 7, "url": "https://github.com/toujaninoura/task-manager/issues/7", "titre": "feat: Page login Bootstrap", "priorite": "MUST HAVE" },
+    { "id": 8, "url": "https://github.com/toujaninoura/task-manager/issues/8", "titre": "feat: Dashboard statistiques", "priorite": "MUST HAVE" },
+    { "id": 9, "url": "https://github.com/toujaninoura/task-manager/issues/9", "titre": "feat: Liste tâches tableau + badges", "priorite": "MUST HAVE" },
+    { "id": 10, "url": "https://github.com/toujaninoura/task-manager/issues/10", "titre": "feat: Formulaire ajout/modification modal", "priorite": "MUST HAVE" },
+    { "id": 11, "url": "https://github.com/toujaninoura/task-manager/issues/11", "titre": "feat: Filtres statut et priorité", "priorite": "MUST HAVE" },
+    { "id": 12, "url": "https://github.com/toujaninoura/task-manager/issues/12", "titre": "feat: Seed data SQL Server", "priorite": "SHOULD HAVE" },
+    { "id": 13, "url": "https://github.com/toujaninoura/task-manager/issues/13", "titre": "feat: Tests NUnit couche Service", "priorite": "SHOULD HAVE" },
+    { "id": 14, "url": "https://github.com/toujaninoura/task-manager/issues/14", "titre": "feat: Tests Jasmine composants Angular", "priorite": "NICE TO HAVE" }
+  ]
 }

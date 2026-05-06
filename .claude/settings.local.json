@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git clone *)",
+      "Bash(git -c http.sslVerify=false clone https://github.com/toujaninoura/task-manager.git /tmp/task-manager)",
+      "Bash(find /tmp/task-manager -type f | sort 2>&1 | head -100)",
+      "Read(//tmp/**)",
+      "Bash(ls \"C:/Users/touja/AppData/Local/Temp/task-manager/TaskManager.Infrastructure/Data/\" 2>&1)",
+      "Read(//c/Users/touja/AppData/Local/Temp/task-manager/TaskManager.Infrastructure/Data/**)",
+      "Bash(gh api *)",
+      "Bash(ls /mnt/c/Users/touja/ 2>/dev/null | grep -i task)",
+      "Read(//mnt/c/Users/**)"
+    ]
+  }
+}

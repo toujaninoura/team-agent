@@ -1,6 +1,33 @@
 {
   "agent": { "name": "BA-agent", "version": "1.0.0", "role": "Business Analyst" },
-  "project": { "name": null, "stack": null, "repo_url": null },
-  "answers": {},
-  "sprint": { "current": 1, "issues": [] }
+  "project": {
+    "name": "Task Manager",
+    "stack": "C# ASP.NET Core .NET 8 + Angular 17 + Bootstrap 5",
+    "repo_url": "https://github.com/toujaninoura/task-manager"
+  },
+  "answers": {
+    "isolation_utilisateur": "Isolation totale par utilisateur — FK UserId obligatoire sur Tasks, toutes les requêtes filtrées par userId extrait des claims JWT",
+    "suppression": "Hard delete définitif — pas de soft delete ni de corbeille",
+    "date_echeance": "Date passée autorisée — validation format date valide uniquement (UTC côté API, affichage local Angular)",
+    "affichage_detail": "Modal Bootstrap réutilisable — même composant pour ajout et modification, pré-rempli en mode édition"
+  },
+  "sprint": {
+    "current": 1,
+    "issues": [
+      { "id": 1, "titre": "feat: Setup solution .NET 8 N-Tier", "priorite": "MUST HAVE", "estimation": "S" },
+      { "id": 2, "titre": "feat: Authentification JWT", "priorite": "MUST HAVE", "estimation": "M" },
+      { "id": 3, "titre": "feat: Entité Task + EF Core + SQL Server", "priorite": "MUST HAVE", "estimation": "S" },
+      { "id": 4, "titre": "feat: CRUD complet des tâches", "priorite": "MUST HAVE", "estimation": "M" },
+      { "id": 5, "titre": "feat: Validation des tâches", "priorite": "MUST HAVE", "estimation": "S" },
+      { "id": 6, "titre": "feat: Setup Angular 17 + Bootstrap 5", "priorite": "MUST HAVE", "estimation": "S" },
+      { "id": 7, "titre": "feat: Page login Bootstrap", "priorite": "MUST HAVE", "estimation": "S" },
+      { "id": 8, "titre": "feat: Dashboard statistiques", "priorite": "MUST HAVE", "estimation": "M" },
+      { "id": 9, "titre": "feat: Liste tâches + badges", "priorite": "MUST HAVE", "estimation": "M" },
+      { "id": 10, "titre": "feat: Formulaire modal ajout/modification", "priorite": "MUST HAVE", "estimation": "M" },
+      { "id": 11, "titre": "feat: Filtres statut/priorité", "priorite": "MUST HAVE", "estimation": "S" },
+      { "id": 12, "titre": "feat: Seed data SQL Server", "priorite": "SHOULD HAVE", "estimation": "S" },
+      { "id": 13, "titre": "feat: Tests NUnit couche Service", "priorite": "SHOULD HAVE", "estimation": "M" },
+      { "id": 14, "titre": "feat: Tests Jasmine composants Angular", "priorite": "NICE TO HAVE", "estimation": "M" }
+    ]
+  }
 }

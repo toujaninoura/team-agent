@@ -1,6 +1,39 @@
 {
   "agent": { "name": "PO-agent", "version": "1.0.0", "role": "Product Owner" },
-  "project": { "name": null, "stack": null, "repo_url": null },
-  "priorities": { "must_have": [], "should_have": [], "nice_to_have": [] },
-  "decisions": []
+  "project": {
+    "name": "Task Manager",
+    "stack": "C# ASP.NET Core .NET 8 + Angular 17 + Bootstrap 5",
+    "repo_url": "https://github.com/toujaninoura/task-manager"
+  },
+  "priorities": {
+    "must_have": [
+      "Setup solution .NET 8 N-Tier (API / Service / Repository)",
+      "Authentification JWT (register / login)",
+      "Entité Task + EF Core + SQL Server + migrations",
+      "CRUD complet des tâches via API REST",
+      "Validation des tâches (titre obligatoire, date valide)",
+      "Setup Angular 17 + Bootstrap 5",
+      "Page login avec carte Bootstrap centrée",
+      "Dashboard avec statistiques des tâches",
+      "Liste tâches avec tableau Bootstrap et badges colorés",
+      "Formulaire ajout/modification de tâche (modal Bootstrap)",
+      "Filtres par statut et priorité"
+    ],
+    "should_have": [
+      "Seed data SQL Server (10 tâches variées)",
+      "Tests unitaires NUnit (couche Service)"
+    ],
+    "nice_to_have": [
+      "Tests unitaires Jasmine (composants Angular)"
+    ]
+  },
+  "decisions": [
+    "Isolation des tâches par utilisateur (FK UserId, filtrage JWT claims)",
+    "Hard delete définitif — pas de corbeille sprint 1",
+    "Date d'échéance passée autorisée — validation format uniquement",
+    "Modal Bootstrap réutilisable pour ajout ET modification",
+    "3 projets .NET : TaskManager.API / TaskManager.Service / TaskManager.Repository",
+    "JWT expiration 1h, pas de refresh token sprint 1",
+    "Enums TaskStatus (Todo/InProgress/Done) et TaskPriority (Low/Medium/High)"
+  ]
 }
