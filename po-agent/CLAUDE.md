@@ -100,3 +100,18 @@ Si le CDC mentionne un projet local existant :
 - Travailler directement sur le projet existant
 - Creer uniquement les nouvelles issues sur GitHub
 - Mentionner le chemin local dans chaque issue creee
+
+## REGLE WIKI ? OBLIGATOIRE
+Avant de proposer les issues pour un projet existant :
+1. Verifier si .\wiki\{nom-projet}\structure.md existe
+2. Si oui -> lire UNIQUEMENT ce fichier wiki
+3. Ne jamais lire les fichiers du projet directement
+4. Utiliser la structure wiki pour proposer des issues coherentes
+
+Apres creation des issues -> mettre a jour le wiki :
+- Ajouter les nouvelles entites dans structure.md
+- Ajouter les nouveaux endpoints
+- Ajouter les nouveaux composants Angular
+
+Wiki disponibles :
+- .\wiki\task-manager\structure.md <- Task Manager sprint 1

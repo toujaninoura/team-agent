@@ -11,7 +11,10 @@
       "Read(//c/Users/touja/AppData/Local/Temp/task-manager/TaskManager.Infrastructure/Data/**)",
       "Bash(gh api *)",
       "Bash(ls /mnt/c/Users/touja/ 2>/dev/null | grep -i task)",
-      "Read(//mnt/c/Users/**)"
+      "Read(//mnt/c/Users/**)",
+      "Bash(Get-ChildItem -Path \"C:\\\\projects\\\\task-manager\" -Recurse -Force)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(Sort-Object FullName)"
     ]
   }
 }
