@@ -1,0 +1,22 @@
+﻿{
+  "hooks": [
+    {
+      "matcher": "mcp__github__create_issue",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "echo RAPPEL : Issue creee. Apres TOUTES les issues -> ingerer conversation + structure + sprint dans le wiki."
+        }
+      ]
+    },
+    {
+      "matcher": "Stop",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "echo FIN DE SESSION : As-tu ingere la conversation PO/BA, la structure du projet et les issues du sprint dans le wiki ?"
+        }
+      ]
+    }
+  ]
+}

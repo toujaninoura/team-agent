@@ -75,3 +75,67 @@ mcp__github__create_issue(owner, repo, title, body, labels)
 Afficher apres chaque creation :
 ### ETAPE 4 - Conclusion
 Sauvegarder dans po-memory.json et ba-memory.json.
+
+## WIKI - OBLIGATOIRE
+
+### Au demarrage - lire le wiki
+Avant de proposer les issues pour un projet existant :
+"What do I know about {nom-projet} ?"
+"What do I know about sprint {N} for {nom-projet} ?"
+
+### Apres creation des issues - ingerer dans le wiki
+
+#### 1. Sauvegarder la conversation PO/BA
+"Ingest this conversation into the wiki:
+
+Sprint {N} - {nom-projet} - {date}
+=================================
+{toute la conversation PO/BA du debut a la fin}
+"
+
+#### 2. Sauvegarder la structure du projet
+"Ingest this project structure into the wiki:
+
+Project : {nom-projet}
+Sprint  : {N}
+Date    : {date}
+Repo    : {url}
+Local   : C:\projects\{nom-projet}
+Stack   : {stack}
+
+Entites :
+{liste des entites avec champs}
+
+Endpoints :
+{liste des endpoints}
+
+Composants Angular :
+{liste des composants}
+
+Nouvelles features sprint {N} :
+{liste des features ajoutees ce sprint}
+"
+
+#### 3. Sauvegarder les issues du sprint
+"Ingest this sprint backlog into the wiki:
+
+Sprint {N} - {nom-projet} - {date}
+===================================
+MUST HAVE :
+  #{N} - {titre} - {estimation} - {url github}
+
+SHOULD HAVE :
+  #{N} - {titre} - {estimation} - {url github}
+
+NICE TO HAVE :
+  #{N} - {titre} - {estimation} - {url github}
+
+Total : {N} issues
+Repo  : {url}
+"
+
+### Ordre obligatoire apres creation des issues
+1. Ingerer la conversation PO/BA
+2. Ingerer la structure du projet
+3. Ingerer les issues du sprint
+4. Afficher confirmation :
